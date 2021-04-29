@@ -5,7 +5,7 @@ class GamesSpider(scrapy.Spider):
     name = 'games'
     allowed_domains = ['steampowered.com']
     start_urls = [
-        'http://store.steampowered.com/search/?sort_by=Released_DESC/']
+        'https://store.steampowered.com/search/?sort_by=Released_DESC&=DESC&page=1']
 
     def parse(self, response):
         all_games = response.xpath(
@@ -14,6 +14,11 @@ class GamesSpider(scrapy.Spider):
             url = game.xpath('./@href').extract_first()
             # crawl the game URL
             yield scrapy.Request(url, callback=self.parse_game)
+
+        # TODO: parse the next page and so on until there is no next page
+        # Example:
+        # next_page = path to the URL
+        # yield scrapy.Request(next_page, callback=self.parse())
 
     # callback function for game url
     def parse_game(self, response):
@@ -46,3 +51,6 @@ class GamesSpider(scrapy.Spider):
             'genres' : stripped_genres,
             'url': url,
         }
+# links to next pages
+# https://store.steampowered.com/search/?sort_by=Released_DESC&sort_order=DESC&page=2
+# a.pagebtn <- extract all pagebtn and take the second one
