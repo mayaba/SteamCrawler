@@ -8,18 +8,12 @@ class GamesSpider(scrapy.Spider):
         'http://store.steampowered.com/search/?sort_by=Released_DESC/']
 
     def parse(self, response):
-
-            # if '/agecheck/app' in response.url:
-            #     self.fakeAge(response.url)
-
         all_games = response.xpath(
             '/html/body/div[1]/div[7]/div[4]/form/div[1]/div/div[1]/div[3]/div/div[3]/a')
-
         for game in all_games:
             url = game.xpath('./@href').extract_first()
             # crawl the game URL
             yield scrapy.Request(url, callback=self.parse_game)
-
 
     # callback function for game url
     def parse_game(self, response):
@@ -51,10 +45,4 @@ class GamesSpider(scrapy.Spider):
             'tags' : stripped_tags,
             'genres' : stripped_genres,
             'url': url,
-            'headers': headers,
         }
-    
-    # to pypass age checker
-    # def fakeAge(url):
-    #     form = url.css('.agegate_birthday_selector')
-    #     redirect_url = '/agecheckset/app/9200/'
