@@ -1,0 +1,5 @@
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en
+User-Agent: Scrapy/2.5.0 (+https://scrapy.org)
+Accept-Encoding: gzip, deflate
+Cookie: steamCountry=SA%7C0af8abeea1fd334e481c3ebac670cf99; browserid=2561961669145299763; recentapps=%7B%22847530%22%3A1619316262%7D; sessionid=b5d50cd02b858066a580cbaf

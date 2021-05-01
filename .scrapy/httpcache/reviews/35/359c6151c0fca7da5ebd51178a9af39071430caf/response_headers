@@ -1,0 +1,14 @@
+Content-Length: 12808
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+X-Frame-Options: SAMEORIGIN
+Content-Security-Policy: default-src blob: data: https: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://community.akamai.steamstatic.com/ https://cdn.akamai.steamstatic.com/steamcommunity/public/assets/ https://api.steampowered.com/ *.google-analytics.com https://www.google.com https://www.gstatic.com https://apis.google.com https://recaptcha.net https://www.gstatic.cn/recaptcha/; object-src 'none'; connect-src 'self' https://community.akamai.steamstatic.com/ https://store.steampowered.com/ wss://community.steam-api.com/websocket/ https://api.steampowered.com/ *.google-analytics.com https://*.valvesoftware.com https://*.steambeta.net https://*.steamcontent.com https://steambroadcast.akamaized.net https://steambroadcastchat.akamaized.net https://broadcast.st.dl.bscstorage.net https://broadcast.st.dl.eccdnx.com http://127.0.0.1:27060 ws://127.0.0.1:27060 https://steamvideo-a.akamaihd.net/; frame-src 'self' steam: https://store.steampowered.com/ https://www.youtube.com https://www.google.com https://sketchfab.com https://player.vimeo.com https://medal.tv https://www.google.com/recaptcha/ https://recaptcha.net/recaptcha/; frame-ancestors 'self' https://steamloopback.host ;
+Expires: Mon, 26 Jul 1997 05:00:00 GMT
+Cache-Control: no-cache
+Content-Encoding: gzip
+Vary: Accept-Encoding
+Date: Fri, 30 Apr 2021 23:41:33 GMT
+Set-Cookie: sessionid=26eb5d927a418849358cf1b7; Path=/; Secure; SameSite=None
+Set-Cookie: steamCountry=SA%7Cc112ae4ed832ab7d8ca7eae356c475ff; Path=/; Secure; HttpOnly; SameSite=None
+Set-Cookie: recentlyVisitedAppHubs=316790; expires=Sat, 30-Apr-2022 23:41:33 GMT; Max-Age=31536000; path=/
+Set-Cookie: recentlyVisitedAppHubs=316790; expires=Sat, 30-Apr-2022 23:41:33 GMT; Max-Age=31536000; path=/
