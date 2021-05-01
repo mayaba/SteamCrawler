@@ -1,5 +1,5 @@
 *.pyc
-junk/*
 *.json
 *.csv
 *.txt
+.scrapy/*
