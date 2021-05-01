@@ -1,5 +1,49 @@
 import scrapy
 from ..items import GameReview
+from w3lib.url import url_query_parameter
+from scrapy.http import FormRequest, Request
+
+
+
+def str_to_float(x):
+    x = x.replace(',', '')
+    try:
+        return float(x)
+    except:
+        return x
+
+
+def str_to_int(x):
+    try:
+        return int(str_to_float(x))
+    except:
+        return x
+
+
+
+def get_page(response):
+    from_page = response.meta.get('from_page', None)
+
+    if from_page:
+        page = from_page + 1
+    else:
+        page = url_query_parameter(response.url, 'p', None)
+        if page:
+            page = str_to_int(page)
+
+    return page
+
+
+def get_product_id(response):
+    product_id = response.meta.get('product_id', None)
+
+    if not product_id:
+        try:
+            return re.findall("app/(.+?)/", response.url)[0]
+        except:
+            return None
+    else:
+        return product_id
 
 
 class ReviewsSpider(scrapy.Spider):
@@ -9,6 +53,10 @@ class ReviewsSpider(scrapy.Spider):
         'http://steamcommunity.com/app/316790/reviews/?browsefilter=mostrecent&p=1&filterLanguage=english']
 
     def parse(self, response):
+
+        page = get_page(response)
+        product_id = get_product_id(response)
+
         # get all reviews
         all_reviews = response.css("div .apphub_Card")
 
@@ -25,3 +73,28 @@ class ReviewsSpider(scrapy.Spider):
                 r.css(".apphub_CardTextContent::text").extract()).strip()
 
             yield ur
+
+        # Navigate to next page.
+        form = response.xpath('//form[contains(@id, "MoreContentForm")]')
+        if form:
+            yield self.process_pagination_form(form, page, product_id)
+
+    def process_pagination_form(self, form, page=None, product_id=None):
+        action = form.xpath('@action').extract_first()
+        names = form.xpath('input/@name').extract()
+        values = form.xpath('input/@value').extract()
+
+        formdata = dict(zip(names, values))
+        meta = dict(prev_page=page, product_id=product_id)
+
+        return FormRequest(
+        url=action,
+        method='GET',
+        formdata=formdata,
+        callback=self.parse,
+        meta=meta
+        )
+
+
+# TODO: Read about meta in scrapy
+# //*[@id="AppHubCards"]/div[contains(@id, "page")]

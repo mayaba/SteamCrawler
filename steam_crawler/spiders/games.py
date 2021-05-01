@@ -6,7 +6,7 @@ class GamesSpider(scrapy.Spider):
     name = 'games'
     allowed_domains = ['steampowered.com']
     start_urls = [
-        'https://store.steampowered.com/search/?sort_by=Released_DESC&=DESC&page=1000']
+        'https://store.steampowered.com/search/?sort_by=Released_DESC&=DESC&page=1']
 
     def parse(self, response):
         all_games = response.xpath(
@@ -17,9 +17,15 @@ class GamesSpider(scrapy.Spider):
             yield scrapy.Request(url, callback=self.parse_game)
 
         # TODO: parse the next page and so on until there is no next page
-        # Example:
-        # next_page = path to the URL
-        # yield scrapy.Request(next_page, callback=self.parse())
+        page_btns = response.css('a.pagebtn')
+        next_page = ''
+        
+        for btn in page_btns:
+            btn_direction = True if btn.css('a ::text').extract_first()=='>' else False
+            next_page = btn.css('a ::attr(href)').extract_first() if btn_direction else ''
+        
+        if next_page:
+            yield scrapy.Request(next_page, callback=self.parse())
 
     # callback function for game url
     def parse_game(self, response):
@@ -59,7 +65,3 @@ class GamesSpider(scrapy.Spider):
             bi['tags'] = stripped_tags
             bi['genres'] = stripped_genres
             yield bi
-    
-    # to get reviews
-    def getReviews(self, response):
-        pass
