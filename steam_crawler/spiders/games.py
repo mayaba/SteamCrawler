@@ -6,7 +6,7 @@ class GamesSpider(scrapy.Spider):
     name = 'games'
     allowed_domains = ['steampowered.com']
     start_urls = [
-        'https://store.steampowered.com/search/?sort_by=Released_DESC&=DESC&page=1']
+        'https://store.steampowered.com/search/?sort_by=Released_DESC&=DESC&page=1000']
 
     def parse(self, response):
         all_games = response.xpath(
@@ -30,12 +30,14 @@ class GamesSpider(scrapy.Spider):
     # callback function for game url
     def parse_game(self, response):
         #convert total reviews to int
-        total_reviews = int(response.css(
-            'div.user_reviews_filter_menu:nth-child(1) > div:nth-child(2) > div:nth-child(1) > label:nth-child(2) > span:nth-child(1) ::text').extract_first().replace(',', '').replace('(', '').replace(')', ''))
-
-        if total_reviews > 25:
-            # create Basic Information item
+        total_reviews = response.css(
+            'div.user_reviews_filter_menu:nth-child(1) > div:nth-child(2) > div:nth-child(1) > label:nth-child(2) > span:nth-child(1) ::text').extract_first()
+        
+        if total_reviews:
             bi = GameBasicInfo()
+            bi['total_reviews'] = int(total_reviews.replace(',', '').replace('(', '').replace(')', ''))
+            # if reviews_int > 25:
+            # create Basic Information item
 
             bi['appid'] = response.request.url.split('/')[-3]
             bi['title'] = response.xpath(

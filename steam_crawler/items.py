@@ -15,6 +15,7 @@ class GameBasicInfo(scrapy.Item):
     tags = scrapy.Field()
     genres = scrapy.Field()
     early_access = scrapy.Field()
+    total_reviews = scrapy.Field()
 
 # reviews from community hub
 class GameReview(scrapy.Item):
