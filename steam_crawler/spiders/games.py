@@ -2,6 +2,7 @@ import scrapy
 from ..items import GameBasicInfo
 # to automate the bypassing of agecheker pages
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
@@ -33,7 +34,9 @@ class GamesSpider(scrapy.Spider):
 
         if '/agecheck/app' in response.url:
             # automate choosing the date and clicking the view button
-            driver = webdriver.Chrome()
+            chrome_options = Options()
+            chrome_options.add_argument("--headless") # make the browser headless
+            driver = webdriver.Chrome(options=chrome_options)
             driver.get(response.url)
             ageYear = Select(driver.find_element_by_id('ageYear'))
             ageYear.select_by_value('1970')  # change the year
