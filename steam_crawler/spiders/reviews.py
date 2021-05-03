@@ -74,11 +74,34 @@ def removeEmojis(text):
     return regrex_pattern.sub(r'', text)
 
 
+def readFile(inputFile):
+    file = open(inputFile, "r")
+    lines = file.readlines()
+    file.close
+    strtipedLines = []
+    for line in lines:
+        strtipedLines.append(line.strip('\n'))
+    return strtipedLines
+
+
 class ReviewsSpider(scrapy.Spider):
     name = 'reviews'
     allowed_domains = ['steamcommunity.com']
-    start_urls = [
-        'http://steamcommunity.com/app/316790/reviews/?browsefilter=mostrecent&p=1&filterLanguage=english']
+
+    def __init__(self, url_file=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.url_file = url_file
+
+    def read_urls(self):
+        with open(self.url_file, 'r') as f:
+            for url in f:
+                url = url.strip()
+                if url:
+                    yield scrapy.Request(url, callback=self.parse)
+
+    def start_requests(self):
+        if self.url_file:
+            yield from self.read_urls()
 
     def parse(self, response):
         page = getPage(response)
@@ -95,6 +118,7 @@ class ReviewsSpider(scrapy.Spider):
             if review_text:
                 ur = GameReview()
                 # get review data
+                ur['appid'] = response.request.url
                 rank = r.css(".title::text").extract_first()
                 ur['rank'] = rank
                 review_date = convertToDate(
@@ -106,7 +130,7 @@ class ReviewsSpider(scrapy.Spider):
                 ur['positive_review'] = True if rank == 'Recommended' else False
                 duration = str(datetime.date.today() -
                                review_date).split(',')[0].split(' ')[0]
-                ur['date_duration_days'] = int(duration)
+                ur['date_duration_days'] = duration
                 yield ur
 
         # Navigate to next page.

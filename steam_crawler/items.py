@@ -19,11 +19,11 @@ class GameBasicInfo(scrapy.Item):
     positive_reviews = scrapy.Field()
     negative_reviews = scrapy.Field()
     english_reviews = scrapy.Field()
+    mature_content = scrapy.Field()
 
 # reviews from community hub
 class GameReview(scrapy.Item):
-    # TODO: add appid, positive and negative reviews, and date duration (since today)
-    # appid = scrapy.Field()
+    appid = scrapy.Field()
     rank = scrapy.Field()
     date = scrapy.Field()
     hours = scrapy.Field()
