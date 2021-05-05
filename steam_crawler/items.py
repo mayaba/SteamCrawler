@@ -30,3 +30,13 @@ class GameReview(scrapy.Item):
     review_text = scrapy.Field()
     positive_review = scrapy.Field()
     date_duration_days = scrapy.Field()
+    user_num_of_games = scrapy.Field()
+
+# reviews from community hub
+class ReleaseNotes(scrapy.Item):
+    appid = scrapy.Field()
+    title = scrapy.Field()
+    notes_body = scrapy.Field()
+    rate = scrapy.Field()
+    comment_count = scrapy.Field()
+     

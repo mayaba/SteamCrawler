@@ -74,33 +74,23 @@ def removeEmojis(text):
     return regrex_pattern.sub(r'', text)
 
 
-def readFile(inputFile):
-    file = open(inputFile, "r")
-    lines = file.readlines()
-    file.close
-    strtipedLines = []
-    for line in lines:
-        strtipedLines.append(line.strip('\n'))
-    return strtipedLines
-
-
 class ReviewsSpider(scrapy.Spider):
     name = 'reviews'
     allowed_domains = ['steamcommunity.com']
 
-    def __init__(self, url_file=None, *args, **kwargs):
+    def __init__(self, community_urls=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.url_file = url_file
+        self.community_urls = community_urls
 
     def read_urls(self):
-        with open(self.url_file, 'r') as f:
+        with open(self.community_urls, 'r') as f:
             for url in f:
                 url = url.strip()
                 if url:
                     yield scrapy.Request(url, callback=self.parse)
 
     def start_requests(self):
-        if self.url_file:
+        if self.community_urls:
             yield from self.read_urls()
 
     def parse(self, response):
@@ -118,7 +108,7 @@ class ReviewsSpider(scrapy.Spider):
             if review_text:
                 ur = GameReview()
                 # get review data
-                ur['appid'] = response.request.url
+                ur['appid'] = product_id
                 rank = r.css(".title::text").extract_first()
                 ur['rank'] = rank
                 review_date = convertToDate(
@@ -131,6 +121,7 @@ class ReviewsSpider(scrapy.Spider):
                 duration = str(datetime.date.today() -
                                review_date).split(',')[0].split(' ')[0]
                 ur['date_duration_days'] = duration
+                ur['user_num_of_games'] = r.xpath('//div[@class="apphub_CardContentMoreLink ellipsis"]/text()').extract_first().split(' ')[0]
                 yield ur
 
         # Navigate to next page.
